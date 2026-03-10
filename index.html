@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crafteon Labs – 3D Printed Magic</title>
+  <link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --coral: #FF5E5B;
+      --yellow: #FFED66;
+      --cyan: #00CECB;
+      --purple: #9B5DE5;
+      --mint: #D4F5C8;
+      --dark: #1A1A2E;
+      --white: #FFFDF7;
+      --card-bg: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--white);
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 5%;
+      background: var(--dark);
+    }
+    .logo {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.8rem;
+      color: var(--yellow);
+      letter-spacing: 1px;
+    }
+    .logo span { color: var(--cyan); }
+    nav ul { list-style: none; display: flex; gap: 2rem; }
+    nav ul a {
+      text-decoration: none;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--yellow); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--dark);
+      display: flex; align-items: center; justify-content: center;
+      padding: 6rem 5% 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-blobs { position: absolute; inset: 0; pointer-events: none; }
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); opacity: 0.25;
+      animation: float 8s ease-in-out infinite alternate;
+    }
+    .blob1 { width: 500px; height: 500px; background: var(--purple); top: -100px; left: -100px; }
+    .blob2 { width: 400px; height: 400px; background: var(--coral); bottom: -80px; right: -80px; animation-delay: 2s; }
+    .blob3 { width: 300px; height: 300px; background: var(--cyan); top: 40%; left: 50%; animation-delay: 4s; }
+
+    @keyframes float {
+      from { transform: translate(0, 0) scale(1); }
+      to   { transform: translate(30px, 30px) scale(1.08); }
+    }
+
+    .hero-inner {
+      position: relative; z-index: 1;
+      text-align: center; max-width: 820px;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--dark);
+      font-weight: 800;
+      font-size: 0.85rem;
+      padding: 0.35rem 1.1rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hero-inner h1 {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      line-height: 1.1;
+      color: var(--white);
+    }
+    .hero-inner h1 .accent-coral { color: var(--coral); }
+    .hero-inner h1 .accent-cyan  { color: var(--cyan); }
+    .hero-inner p {
+      margin: 1.5rem auto;
+      font-size: 1.15rem;
+      color: #ccc;
+      max-width: 550px;
+      line-height: 1.7;
+    }
+    .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2.2rem;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer; border: none;
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.25); }
+    .btn-primary { background: var(--coral); color: white; }
+    .btn-outline  { background: transparent; color: var(--white); border: 2px solid var(--white); }
+    .btn-outline:hover { background: var(--white); color: var(--dark); }
+
+    .hero-stats {
+      display: flex; gap: 2.5rem; justify-content: center;
+      margin-top: 3.5rem; flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Boogaloo', cursive;
+      font-size: 2.2rem; color: var(--yellow);
+    }
+    .stat-label { font-size: 0.85rem; color: #aaa; font-weight: 600; }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 5rem 5%; }
+    .section-tag {
+      display: inline-block;
+      font-size: 0.8rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 2px;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      margin-bottom: 0.8rem;
+    }
+    .section-title {
+      font-family: 'Boogaloo', cursive;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
+    .section-sub {
+      font-size: 1rem; color: #666; max-width: 520px; line-height: 1.7;
+    }
+    .section-header { margin-bottom: 3rem; }
+
+    /* ── THEMES ── */
+    #themes { background: var(--dark); }
+    #themes .section-tag { background: var(--yellow); color: var(--dark); }
+    #themes .section-title { color: var(--white); }
+    #themes .section-sub { color: #bbb; }
+
+    .themes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+    .theme-card {
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      position: relative; overflow: hidden;
+      transition: transform 0.3s;
+      cursor: default;
+    }
+    .theme-card:hover { transform: translateY(-6px) rotate(-1deg); }
+    .theme-card .emoji { font-size: 2.8rem; margin-bottom: 0.8rem; display: block; }
+    .theme-card h3 { font-size: 1.2rem; font-weight: 800; margin-bottom: 0.4rem; }
+    .theme-card p  { font-size: 0.9rem; line-height: 1.5; opacity: 0.85; }
+
+    .tc1 { background: var(--coral); color: white; }
+    .tc2 { background: var(--cyan);  color: var(--dark); }
+    .tc3 { background: var(--purple); color: white; }
+    .tc4 { background: var(--yellow); color: var(--dark); }
+    .tc5 { background: #FF9F1C; color: white; }
+    .tc6 { background: #2EC4B6; color: white; }
+
+    /* ── GALLERY ── */
+    #gallery .section-tag { background: var(--purple); color: white; }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .gallery-card {
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--card-bg);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .gallery-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.14);
+    }
+    .gallery-thumb {
+      height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem;
+      position: relative;
+    }
+    .gallery-info { padding: 1.2rem 1.4rem 1.5rem; }
+    .gallery-info h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 0.3rem; }
+    .gallery-info p  { font-size: 0.88rem; color: #777; line-height: 1.5; }
+    .gallery-tag {
+      display: inline-block;
+      margin-top: 0.7rem;
+      padding: 0.2rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem; font-weight: 700;
+      background: var(--mint); color: var(--dark);
+    }
+
+    /* ── PRICING ── */
+    #pricing { background: var(--dark); }
+    #pricing .section-tag { background: var(--coral); color: white; }
+    #pricing .section-title { color: var(--white); }
+    #pricing .section-sub { color: #bbb; }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .pricing-card {
+      border-radius: 20px;
+      padding: 2rem;
+      background: #252547;
+      border: 2px solid transparent;
+      transition: border-color 0.3s, transform 0.3s;
+      position: relative;
+    }
+    .pricing-card:hover { border-color: var(--cyan); transform: translateY(-4px); }
+    .pricing-card.popular {
+      border-color: var(--yellow);
+      background: #2e2e58;
+    }
+    .popular-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--yellow); color: var(--dark);
+      font-size: 0.78rem; font-weight: 800;
+      padding: 0.2rem 1rem; border-radius: 999px;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .pricing-icon { font-size: 2.2rem; margin-bottom: 1rem; }
+    .pricing-card h3 { font-size: 1.2rem; font-weight: 800; color: var(--white); margin-bottom: 0.3rem; }
+    .pricing-card .price {
+      font-family: 'Boogaloo', cursive;
+      font-size: 2.4rem; color: var(--cyan);
+      margin: 0.6rem 0;
+    }
+    .pricing-card .price span { font-size: 1rem; color: #aaa; font-family: 'Nunito', sans-serif; }
+    .pricing-card .desc { font-size: 0.9rem; color: #aaa; margin-bottom: 1.2rem; line-height: 1.6; }
+    .pricing-features { list-style: none; }
+    .pricing-features li {
+      color: #ccc; font-size: 0.9rem;
+      padding: 0.35rem 0;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .pricing-features li::before { content: "✦"; color: var(--cyan); font-size: 0.75rem; }
+    .pricing-card .btn { width: 100%; text-align: center; margin-top: 1.5rem; display: block; }
+    .popular .btn { background: var(--yellow); color: var(--dark); }
+
+    /* ── ORDER FORM ── */
+    #contact {
+      background: linear-gradient(135deg, #fff9f0 0%, #fff0f8 100%);
+    }
+    #contact .section-tag { background: var(--cyan); color: var(--dark); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    @media(max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+
+    .contact-info h2 { font-family: 'Boogaloo', cursive; font-size: 2.2rem; margin-bottom: 1rem; }
+    .contact-info p { color: #666; line-height: 1.7; margin-bottom: 1.5rem; }
+    .contact-detail {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin-bottom: 0.9rem;
+      font-weight: 700; font-size: 0.95rem;
+    }
+    .contact-detail .icon-box {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .order-form {
+      background: white;
+      border-radius: 24px;
+      padding: 2.5rem;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.1);
+    }
+    .order-form h3 {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.6rem; margin-bottom: 1.5rem;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media(max-width:500px) { .form-row { grid-template-columns: 1fr; } }
+
+    .form-group { margin-bottom: 1.2rem; }
+    .form-group label {
+      display: block; font-weight: 700; font-size: 0.88rem;
+      margin-bottom: 0.4rem; color: var(--dark);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e8e8e8;
+      border-radius: 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.95rem;
+      transition: border-color 0.2s;
+      outline: none;
+      color: var(--dark);
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--purple); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+
+    .form-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--coral);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 0.5rem;
+    }
+    .form-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255,94,91,0.4);
+    }
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--mint);
+      border-radius: 16px;
+      font-weight: 700;
+      color: #2a7a2a;
+      margin-top: 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 2.5rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer .logo { font-size: 1.5rem; }
+    footer p { color: #666; font-size: 0.88rem; }
+    footer .footer-links { display: flex; gap: 1.5rem; }
+    footer .footer-links a { color: #888; text-decoration: none; font-size: 0.88rem; font-weight: 600; }
+    footer .footer-links a:hover { color: var(--cyan); }
+
+    /* ── SCROLL ANIMATION ── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MARQUEE ── */
+    .marquee-wrap {
+      background: var(--yellow);
+      padding: 0.75rem 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: marquee 18s linear infinite;
+    }
+    .marquee-track span {
+      font-family: 'Boogaloo', cursive;
+      font-size: 1.1rem;
+      color: var(--dark);
+      margin: 0 2rem;
+    }
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Crafteon<span>Labs</span></div>
+  <ul>
+    <li><a href="#themes">Themes</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Order</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-blobs">
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div class="blob blob3"></div>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-badge">🖨️ Pune's Coolest 3D Print Studio</div>
+    <h1>
+      We Print Your<br>
+      <span class="accent-coral">Wildest</span>
+      <span class="accent-cyan"> Ideas</span>
+    </h1>
+    <p>Custom gifts, showpieces, DIY kits & creative merch — all 3D printed with love and precision from Pune.</p>
+    <div class="hero-ctas">
+      <a href="#contact" class="btn btn-primary">Place an Order ✦</a>
+      <a href="#gallery" class="btn btn-outline">See the Gallery</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Items Printed</div></div>
+      <div class="stat"><div class="stat-num">50+</div><div class="stat-label">Happy Customers</div></div>
+      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Custom Made</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>Custom Gifts</span><span>✦</span>
+    <span>Showpieces</span><span>✦</span>
+    <span>DIY Kits</span><span>✦</span>
+    <span>Creative Merch</span><span>✦</span>
+    <span>Name Plates</span><span>✦</span>
+    <span>Anime Figures</span><span>✦</span>
+    <span>Miniatures</span><span>✦</span>
+    <span>Prototypes</span><span>✦</span>
+    <span>Custom Gifts</span><span>✦</span>
+    <span>Showpieces</span><span>✦</span>
+    <span>DIY Kits</span><span>✦</span>
+    <span>Creative Merch</span><span>✦</span>
+    <span>Name Plates</span><span>✦</span>
+    <span>Anime Figures</span><span>✦</span>
+    <span>Miniatures</span><span>✦</span>
+    <span>Prototypes</span><span>✦</span>
+  </div>
+</div>
+
+<!-- THEMES -->
+<section id="themes">
+  <div class="section-header reveal">
+    <div class="section-tag">What We Do</div>
+    <h2 class="section-title">Themes & Specialties</h2>
+    <p class="section-sub">From heartfelt gifts to epic collectibles — we cover all the creative genres you love.</p>
+  </div>
+  <div class="themes-grid">
+    <div class="theme-card tc1 reveal">
+      <span class="emoji">🎁</span>
+      <h3>Custom Gifts</h3>
+      <p>Personalized keepsakes for birthdays, anniversaries, and every occasion worth celebrating.</p>
+    </div>
+    <div class="theme-card tc2 reveal">
+      <span class="emoji">🏆</span>
+      <h3>Showpieces</h3>
+      <p>Decorative sculptures and display pieces that make any shelf look 10x cooler.</p>
+    </div>
+    <div class="theme-card tc3 reveal">
+      <span class="emoji">🔧</span>
+      <h3>DIY Kits</h3>
+      <p>Fun, educational build-it-yourself kits for hobbyists, students, and makers of all ages.</p>
+    </div>
+    <div class="theme-card tc4 reveal">
+      <span class="emoji">🎌</span>
+      <h3>Anime & Pop Culture</h3>
+      <p>Miniatures, figurines, and collectibles from your favourite anime and fandoms.</p>
+    </div>
+    <div class="theme-card tc5 reveal">
+      <span class="emoji">🏷️</span>
+      <h3>Name Plates & Signage</h3>
+      <p>Custom nameplates, desk tags, and decorative signs for home, office, and gifting.</p>
+    </div>
+    <div class="theme-card tc6 reveal">
+      <span class="emoji">💡</span>
+      <h3>Prototypes & Parts</h3>
+      <p>Got an idea? We'll help bring it to life with rapid prototyping and custom parts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="section-header reveal">
+    <div class="section-tag">Portfolio</div>
+    <h2 class="section-title">Fresh from the Printer 🖨️</h2>
+    <p class="section-sub">A peek at some of our favourite creations. Yours could be next!</p>
+  </div>
+  <div class="gallery-grid">
+    <div class="gallery-card reveal">
+      <div class="gallery-thumb" style="background:#FFF0F5;">🐉</div>
+      <div class="gallery-info">
+        <h3>Dragon Showpiece</h3>
+        <p>Intricately detailed articulated dragon — a head-turner for any display shelf.</p>
+        <span class="gallery-tag">Showpiece</span>
+      </div>
+    </div>
+    <div class="gallery-card reveal">
+      <div class="gallery-thumb" style="background:#F0FFF8;">🌿</div>
+      <div class="gallery-info">
+        <h3>Custom Plant Pots</h3>
+        <p>Geometric and character-themed pots personalised with your name or design.</p>
+        <span class="gallery-tag">Custom Gift</span>
+      </div>
+    </div>
+    <div class="gallery-card reveal">
+      <div class="gallery-thumb" style="background:#F0F0FF;">⚔️</div>
+      <div class="gallery-info">
+        <h3>Anime Keychains</h3>
+        <p>Your favourite characters — pocket-sized and perfectly crafted.</p>
+        <span class="gallery-tag">Anime & Pop Culture</span>
+      </div>
+    </div>
+    <div class="gallery-card reveal">
+      <div class="gallery-thumb" style="background:#FFFBF0;">🔩</div>
+      <div class="gallery-info">
+        <h3>Mechanical DIY Kit</h3>
+        <p>Printable gear-based mechanisms — great for students and curious minds.</p>
+        <span class="gallery-tag">DIY Kit</span>
+      </div>
+    </div>
+    <div class="gallery-card reveal">
+      <div class="gallery-thumb" style="background:#FFF5F0;">🪪</div>
+      <div class="gallery-info">
+        <h3>Desk Name Plate</h3>
+        <p>Elegant 3D printed nameplates in bold fonts with a premium painted finish.</p>
+        <span class="gallery-tag">Signage</span>
+      </div>
+    </div>
+    <div class="gallery-card reveal">
+      <div class="gallery-thumb" style="background:#F5F0FF;">🚀</div>
+      <div class="gallery-info">
+        <h3>Custom Miniatures</h3>
+        <p>From DnD characters to personalized avatars — tiny, detailed, and awesome.</p>
+        <span class="gallery-tag">Miniature</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-header reveal">
+    <div class="section-tag">Pricing</div>
+    <h2 class="section-title" style="color:white;">Simple, Honest Pricing</h2>
+    <p class="section-sub">Starting prices — final quotes depend on size and complexity. DM us for a custom estimate!</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="pricing-icon">🎀</div>
+      <h3>Starter</h3>
+      <div class="price">₹149 <span>/ item</span></div>
+      <p class="desc">Small keychains, badges, and simple prints. Perfect for bulk gifting or trying us out.</p>
+      <ul class="pricing-features">
+        <li>Up to 10cm size</li>
+        <li>Single colour</li>
+        <li>3–5 day delivery</li>
+        <li>Basic finishing</li>
+      </ul>
+      <a href="#contact" class="btn btn-primary">Order Now</a>
+    </div>
+    <div class="pricing-card popular reveal">
+      <div class="popular-badge">⭐ Most Popular</div>
+      <div class="pricing-icon">🎁</div>
+      <h3>Custom Gift</h3>
+      <div class="price">₹349 <span>/ item</span></div>
+      <p class="desc">Personalised showpieces, name plates, and gifts with painting & finishing.</p>
+      <ul class="pricing-features">
+        <li>Up to 25cm size</li>
+        <li>Multi-colour options</li>
+        <li>Paint & sand finishing</li>
+        <li>Gift packaging available</li>
+      </ul>
+      <a href="#contact" class="btn">Order Now</a>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="pricing-icon">🚀</div>
+      <h3>Pro / Prototype</h3>
+      <div class="price">₹799 <span>/ item</span></div>
+      <p class="desc">Complex models, DIY kits, engineering prototypes, or large display pieces.</p>
+      <ul class="pricing-features">
+        <li>No size limit</li>
+        <li>Premium filament options</li>
+        <li>Design consultation</li>
+        <li>Custom packaging</li>
+      </ul>
+      <a href="#contact" class="btn btn-primary">Get a Quote</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / ORDER -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info reveal">
+      <div class="section-tag" style="background:var(--cyan);color:var(--dark);">Order Now</div>
+      <h2>Let's Build Something Cool Together</h2>
+      <p>Got an idea? Drop us a message and we'll get back to you with a quote within 24 hours. Based in Pune — shipping across India!</p>
+      <div class="contact-detail">
+        <div class="icon-box" style="background:#FFF0F5;">📍</div>
+        <span>Pune, Maharashtra, India</span>
+      </div>
+      <div class="contact-detail">
+        <div class="icon-box" style="background:#F0FFFC;">📧</div>
+        <span>hello@crafteonlabs.in</span>
+      </div>
+      <div class="contact-detail">
+        <div class="icon-box" style="background:#FFF8F0;">📱</div>
+        <span>+91 XXXXX XXXXX</span>
+      </div>
+      <div class="contact-detail">
+        <div class="icon-box" style="background:#F5F0FF;">💬</div>
+        <span>Instagram: @crafteonlabs</span>
+      </div>
+    </div>
+
+    <div class="order-form reveal">
+      <h3>📦 Place Your Order</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Your Name *</label>
+          <input type="text" placeholder="Tanmay Pawar"/>
+        </div>
+        <div class="form-group">
+          <label>Phone / WhatsApp *</label>
+          <input type="tel" placeholder="+91 9XXXXXXXXX"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" placeholder="you@example.com"/>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category *</label>
+          <select>
+            <option value="">Select a category</option>
+            <option>Custom Gift</option>
+            <option>Showpiece</option>
+            <option>DIY Kit</option>
+            <option>Anime / Pop Culture</option>
+            <option>Name Plate / Signage</option>
+            <option>Prototype / Part</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Budget Range</label>
+          <select>
+            <option value="">Select range</option>
+            <option>Under ₹200</option>
+            <option>₹200 – ₹500</option>
+            <option>₹500 – ₹1000</option>
+            <option>₹1000+</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Describe your idea *</label>
+        <textarea placeholder="Tell us what you have in mind — size, design, colour, quantity, deadline, etc."></textarea>
+      </div>
+      <button class="form-submit" onclick="handleSubmit()">Send My Order Request 🚀</button>
+      <div class="success-msg" id="successMsg">
+        🎉 Got it! We'll WhatsApp you within 24 hours with a quote. Stay cool!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Crafteon<span>Labs</span></div>
+  <p>© 2025 Crafteon Labs · Made with ❤️ in Pune</p>
+  <div class="footer-links">
+    <a href="#gallery">Gallery</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), i * 80);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Form submit simulation
+  function handleSubmit() {
+    const msg = document.getElementById('successMsg');
+    msg.style.display = 'block';
+    setTimeout(() => msg.style.display = 'none', 5000);
+  }
+</script>
+</body>
+</html>
